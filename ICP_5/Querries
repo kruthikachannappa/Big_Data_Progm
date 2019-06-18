@@ -1,0 +1,54 @@
+#1
+#Create table in MySQL and Import into HDFS through Sqoop
+
+Sqoop import Command:(su root)
+
+sqoop import --connect jdbc:mysql://localhost/Test --username root --password cloudera --table student_info --m 1  --target-dir /sqoopimports/ --as-textfile --direct --split-by number
+
+#Export table from HDFS to MySQL
+
+Squoop export command:(su root)
+
+sqoop export --connect jdbc:mysql://localhost/Test --username root --password cloudera --table college_info --export-dir /sqoopfiles/export_files
+
+#2
+Create table in MySQL and Import into hive and then to HDFS through Sqoop
+
+sqoop import --connect  jdbc:mysql://localhost/Test --username root --password cloudera --table Indian_company  --target-dir /hivei/imports.txt --hive-import --create-hive-table --hive-table default.indiancompany -m 1 
+
+export hdfs data into hive and then to MySQL
+
+sqoop export --connect jdbc:mysql://localhost/Test --username root --password cloudera --table exported --export-dir /hive/* --driver com.mysql.jdbc.Driver
+
+#3
+
+#pattern identifier
+sqoop import --connect jdbc:mysql://localhost/Test --username root --password cloudera --query "SELECT *  FROM shakspear WHERE All_lines  LIKE '%__c%' AND  \$CONDITIONS" --m 1  --target-dir /pattern/identifier.txt --hive-import --create-hive-table --hive-table default.optimizer -m 1
+
+#wordcount:
+ DELIMITER $$
+ CREATE FUNCTION wordcount(str TEXT)
+            RETURNS INT
+            DETERMINISTIC
+            SQL SECURITY INVOKER
+            NO SQL
+       BEGIN
+         DECLARE wordCnt, idx, maxIdx INT DEFAULT 0;
+         DECLARE currChar, prevChar BOOL DEFAULT 0;
+         SET maxIdx=char_length(str);
+         WHILE idx < maxIdx DO
+             SET currChar=SUBSTRING(str, idx, 1) RLIKE '[[:alnum:]]';
+             IF NOT prevChar AND currChar THEN
+                 SET wordCnt=wordCnt+1;
+             END IF;
+             SET prevChar=currChar;
+             SET idx=idx+1;
+         END WHILE;
+         RETURN wordCnt;
+       END
+     $$
+sqoop import --connect jdbc:mysql://localhost/Test --username root --password cloudera --query "SELECT All_lines, wordcount(All_lines) as "Words" from shakspear WHERE  \$CONDITIONS" --m 1  --target-dir /shakspear/wordcount.txt --hive-import --create-hive-table --hive-table default.shakspear -m 1
+
+#Statistics
+
+hive>ANALYZE TABLE shakspear COMPUTE STATISTICS;
