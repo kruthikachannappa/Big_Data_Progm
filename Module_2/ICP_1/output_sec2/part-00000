@@ -1,4 +1,2 @@
-((natural,odd),50)
-((natural,odd),60)
-((natural,even),20)
-((natural,even),4)
+((natural,odd),(50,70))
+((natural,even),(20,4))
