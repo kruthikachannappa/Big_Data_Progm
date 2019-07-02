@@ -14,18 +14,14 @@ object secondarysort {
     pairsRDD.foreach { println }
     val numReducers = 2;
 
-    val listRDD = pairsRDD.groupByKey(numReducers).mapValues(iter => iter.toList.sortBy(k => k))
-    println("listRDD")
+    val listRDD = pairsRDD.groupByKey(numReducers).flatMapValues(_.toList.combinations(2))
     listRDD.foreach { println }
-    val resultRDD = listRDD.flatMap {
-      case (label, list) => {
-        list.map((label, _))
-      }
-    }
-    println("resRDD")
-    resultRDD.foreach { println }
+    val rdd4 = listRDD.mapValues { case (elems: List[(String, Integer)]) => ((elems(0), elems(1))) }
 
-    resultRDD.saveAsTextFile("D:\\Source code\\Source code\\wordcount\\output_sec2")
+    println("listRDD")
+    rdd4.foreach { println }
+
+    rdd4.saveAsTextFile("D:\\Source code\\Source code\\wordcount\\output_sec2")
 
   }
 }
