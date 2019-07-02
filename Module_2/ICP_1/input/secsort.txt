@@ -1,0 +1,4 @@
+natural,even,20
+natural,odd,50
+natural,even,4
+natural,odd,60
