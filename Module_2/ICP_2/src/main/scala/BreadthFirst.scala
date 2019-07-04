@@ -43,11 +43,7 @@ object BreadthFirst {
 
     val bfsresult=BFS(1,g)
     val dfsresult=DFS(1,g )
-   // val result = sc.parallelize(1,Seq(Map(1 -> List(2,3,5,6,7), 2 -> List(1,3,4,6,7), 3 -> List(1,2), 4 -> List(2,5,7),5 -> List(1,6,7),6 -> List(1,2,5,7),7 -> List(1,2,4,5,6)))).map(BFS)
-   println(bfsresult.mkString(","))
-   println(dfsresult.mkString(","))
-
+   println("BFS Output",bfsresult.mkString(","))
+   println("DFS Output",dfsresult.mkString(","))
   }
-
-
 }

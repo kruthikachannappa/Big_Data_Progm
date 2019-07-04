@@ -31,14 +31,10 @@ object Mergesort {
 
     val list = List(5,8,6,3,1,2,4,7)
 
-  //  val toLower = udf[list](mergeSort)
-
-
 
     val result = sc.parallelize(Seq(list)).map(mergeSort)
-     result.foreach(println)
     println(result)
-    //val result=mergeSort(list)
+    result.foreach(println)
 
 
   }
